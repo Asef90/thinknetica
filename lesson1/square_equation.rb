@@ -7,11 +7,12 @@ b = gets.chomp.to_i
 puts "Please enter C:"
 c = gets.chomp.to_i
 
-discriminant = b ** 2 - 4 * a * c
+discriminant = b**2 - 4 * a * c
 
 if discriminant > 0
-  root1 = ((-b) + Math.sqrt(discriminant)) / (2.0 * a)
-  root2 = ((-b) - Math.sqrt(discriminant)) / (2.0 * a)
+  disc_sqrt = Math.sqrt(discriminant)
+  root1 = ((-b) + disc_sqrt) / (2.0 * a)
+  root2 = ((-b) - disc_sqrt) / (2.0 * a)
   puts "Discriminant is #{discriminant}, first root is #{root1}, second root is #{root2}"
 elsif discriminant == 0
   root = (-b) / (2.0 * a)
