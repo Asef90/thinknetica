@@ -14,4 +14,3 @@ calendar[2] = 28 if (year % 4 != 0 || year % 100 == 0) && (year % 400 != 0)
 num = 0
 calendar.each.with_index(1) {|days, i| num += days if month > i}
 num += day
-puts num
