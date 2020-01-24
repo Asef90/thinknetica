@@ -1,16 +1,4 @@
-calendar = {
-  1 => 31,
-  3 => 31,
-  4 => 30,
-  5 => 31,
-  6 => 30,
-  7 => 31,
-  8 => 31,
-  9 => 30,
-  10 => 31,
-  11 => 30,
-  12 => 31
-}
+calendar = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 puts "Enter day:"
 day = gets.chomp.to_i
@@ -21,12 +9,8 @@ month = gets.chomp.to_i
 puts "Enter year:"
 year = gets.chomp.to_i
 
-if (year % 4 != 0 || year % 100 == 0) && (year % 400 != 0)
-  calendar[2] = 28
-else
-  calendar[2] = 29
-end
+calendar[2] = 28 if (year % 4 != 0 || year % 100 == 0) && (year % 400 != 0)
 
 num = 0
-calendar.each {|month_n, days| num += days if month_n < month}
+calendar.each_index {|i| num += calendar[i] if month > i + 1}
 num += day

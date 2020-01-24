@@ -1,1 +1,1 @@
-array = (2..20).map {|i| i * 5}
+array = (10..100).step(5).to_a
