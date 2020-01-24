@@ -12,5 +12,6 @@ year = gets.chomp.to_i
 calendar[2] = 28 if (year % 4 != 0 || year % 100 == 0) && (year % 400 != 0)
 
 num = 0
-calendar.each_index {|i| num += calendar[i] if month > i + 1}
+calendar.each.with_index(1) {|days, i| num += days if month > i}
 num += day
+puts num
