@@ -114,7 +114,3 @@ class Train
     end
   end
 end
-
-st1 = Station.new("Pavshino")
-st2 = Station.new("Lyubertsy")
-route1 = Route.new("Pavshino", "Lyubertsy")
