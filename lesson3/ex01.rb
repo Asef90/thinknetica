@@ -7,7 +7,7 @@ class Station
   end
 
   def accept_train(train)
-    trains << train if !(trains.include?(train))
+    trains << train unless trains.include?(train)
   end
 
   def send_train(train)
@@ -84,8 +84,8 @@ class Train
       route.between_stations[0]
     when route.between_stations.include?(current_station)
       i = route.between_stations.index(current_station)
-      len = route.between_stations.size
-      if i == size - 1
+      length = route.between_stations.size
+      if i == length - 1
         route.end_station
       else
         route.between_stations[i + 1]
@@ -99,7 +99,7 @@ class Train
       route.between_stations[-1]
     when route.between_stations.include?(current_station)
       i = route.between_stations.index(current_station)
-      if i == 0
+      if i.zero?
         route.start_station
       else
         route.between_stations[i - 1]
