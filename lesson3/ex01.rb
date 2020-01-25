@@ -7,11 +7,11 @@ class Station
   end
 
   def accept_train(train)
-    trains << train
+    trains << train if !(trains.include?(train))
   end
 
   def send_train(train)
-    trains.delete(train)
+    trains.delete(train) if trains.include?(train)
   end
 
   def get_trains(type)
@@ -51,6 +51,7 @@ class Train
     @number = number
     @type = type
     @cars_number = cars_number
+    @speed = 0
   end
 
   def add_speed(speed)
@@ -83,8 +84,9 @@ class Train
       route.between_stations[0]
     when route.between_stations.include?(current_station)
       i = route.between_stations.index(current_station)
-      if route.between_stations[i + 1].nil?
-        end_station
+      len = route.between_stations.size
+      if i == size - 1
+        route.end_station
       else
         route.between_stations[i + 1]
       end
@@ -97,8 +99,8 @@ class Train
       route.between_stations[-1]
     when route.between_stations.include?(current_station)
       i = route.between_stations.index(current_station)
-      if route.between_stations[i - 1].nil?
-        start_station
+      if i == 0
+        route.start_station
       else
         route.between_stations[i - 1]
       end
@@ -106,11 +108,13 @@ class Train
   end
 
   def move(direction)
+    current_station.send_train(self)
     self.current_station = case
       when direction == "forward"
-        next_station
+        next_station if next_station
       when direction == "back"
-        previous_station
+        previous_station if previous_station
     end
+    current_station.accept_train(self)
   end
 end
