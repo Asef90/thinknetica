@@ -60,4 +60,10 @@ class Train
     self.current_station = previous_station
     current_station.accept_train(self)
   end
+
+  def passenger_train?
+  end
+
+  def cargo_train?
+  end
 end
