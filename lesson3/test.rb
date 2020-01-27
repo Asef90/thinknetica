@@ -1,6 +1,12 @@
 require_relative 'train'
 require_relative 'route'
 require_relative 'station'
+require_relative 'cargo_train'
+require_relative 'passenger_train'
+require_relative 'car'
+require_relative 'passenger_car'
+require_relative 'cargo_car'
+
 
 st1 = Station.new("Nakhabino")
 st2 = Station.new("Podolsk")
@@ -22,9 +28,9 @@ route2.add_between(st7)
 route2.add_between(st8)
 route2.add_between(st9)
 route2.add_between(st10)
-tr1 = Train.new("13", "gruz", 6)
-tr2 = Train.new("14", "pass", 3)
-tr3 = Train.new("15", "pass", 7)
+tr1 = CargoTrain.new("13")
+tr2 = PassengerTrain.new("14")
+tr3 = PassengerTrain.new("15")
 st1.accept_train(tr1)
 st2.accept_train(tr2)
 st2.accept_train(tr3)
@@ -36,7 +42,8 @@ puts tr2.current_station.name
 puts tr3.current_station.name
 puts tr1.next_station.name
 puts tr1.previous_station
-tr1.move_forward
+#tr2.move_forward
 puts tr1.current_station.name
-tr1.move_back
+#tr2.move_back
 puts tr1.current_station.name
+st2.show_trains
