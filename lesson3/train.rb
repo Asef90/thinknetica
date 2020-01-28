@@ -1,6 +1,5 @@
 class Train
-  attr_accessor :speed, :route, :current_station, :cars
-  attr_reader :type
+  attr_reader :type, :number, :speed, :route, :current_station, :cars
 
   def initialize(number)
     @number = number
@@ -22,11 +21,16 @@ class Train
   end
 
   def unhook_car(car)
-    cars.delete(car) if speed == 0 && cars.include?(car)
+    if speed == 0 && cars.include?(car)
+      cars.delete(car)
+      puts "Car is unhooked."
+    else
+      puts "Car unhook error."
+    end
   end
 
   def accept_route(route)
-    if route && route.start_station
+    if route
       self.just_routed = true
       self.route = route
       self.current_station = route.start_station
@@ -61,6 +65,8 @@ class Train
       self.current_station = next_station
       current_station.accept_train(self)
       self.ready_move = false
+    else
+      puts "This is the terminal station."
     end
   end
 
@@ -71,6 +77,8 @@ class Train
       self.current_station = previous_station
       current_station.accept_train(self)
       self.ready_move = false
+    else
+      puts "This is the starting station."
     end
   end
 
@@ -89,14 +97,9 @@ class Train
   end
 
   private
-  #Переменная :ready_move для проверки, действительно ли наш поезд собрался
-  #перемещаться, чтоб нельзя было просто выкинуть или внезапно
-  #принять поезд из ниоткуда. Переменная :just_routed позволит единожды
-  #добавить поезд к начальной станции из ниоткуда - при назначении маршрута.
-
-  #Их можно проcмотреть (например, классе Station в методах :accept_train/
-  #:send_train), но присваивать значения - только в методах :move
-  # или :accept_train самого объекта.
-  attr_writer :ready_move, :just_routed
-
+  #Все эти переменные не должны изменяться внезапно, как бы не захотел пользователь.
+  #Доступ к их изменению должен быть только внутри программы, и по правилам программы.
+  #Для этого даны интерфейсы.
+  #А attr_reader оставляем публичными, т.к. секретной информации нет, пусть смотрят.
+  attr_writer :speed, :route, :current_station, :cars, :ready_move, :just_routed
 end
