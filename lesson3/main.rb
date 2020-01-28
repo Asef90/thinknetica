@@ -7,10 +7,10 @@ require_relative 'car'
 require_relative 'passenger_car'
 require_relative 'cargo_car'
 
-$stations = []
-$trains = []
-$routes = []
-$cars = []
+@stations = []
+@trains = []
+@routes = []
+@cars = []
 
 #Create station methods
 def enter_station_name
@@ -19,13 +19,13 @@ def enter_station_name
 end
 
 def find_station(station_name)
-  $stations.select{|station| station.name == station_name}[0]
+  @stations.select { |station| station.name == station_name }[0]
 end
 
 def create_station(name)
   unless find_station(name)
     station = Station.new(name)
-    $stations << station
+    @stations << station
     puts "Station is created."
   else
     puts "Already exist."
@@ -46,7 +46,7 @@ def enter_train_type
 end
 
 def find_train(number)
-  $trains.select{|train| train.number == number}[0]
+  @trains.select { |train| train.number == number }[0]
 end
 
 def create_train(number, train_type)
@@ -59,7 +59,7 @@ def create_train(number, train_type)
       puts select_error
     end
     if train
-      $trains << train
+      @trains << train
       puts "Train is created."
     end
   else
@@ -84,16 +84,16 @@ def enter_start_end_names
 end
 
 def find_route (start_name, end_name)
-  $routes.select{|route| route.start_station.name == start_name &&
-    route.end_station.name == end_name}[0]
+  @routes.select { |route| route.start_station.name == start_name &&
+    route.end_station.name == end_name }[0]
 end
 
 def create_route(start_name, end_name)
   unless find_route(start_name, end_name)
-    if (start_station = find_station(start_name)) && (end_station = find_station(end_name))
+    if (start_station = find_station(start_name)) && end_station = find_station(end_name)
       route = Route.new(start_station, end_station)
-      $routes << route
-      puts "Route is created. #{$routes}"
+      @routes << route
+      puts "Route is created."
     else
       puts "Please check if your stations exist."
     end
@@ -149,7 +149,7 @@ def enter_car_action
 end
 
 def find_car(number)
-  $cars.select{|car| car.number == number}[0]
+  @cars.select { |car| car.number == number }[0]
 end
 
 def get_car(number, type)
@@ -167,7 +167,7 @@ def get_car(number, type)
 end
 
 def car_is_hooked?(car)
-  $trains.select{|train| train.cars.include?(car)}[0]
+  @trains.select { |train| train.cars.include?(car) }[0]
 end
 
 def change_cars(train, car, action)
@@ -219,7 +219,7 @@ end
 
 #Show info methods
 def show_stations
-  $stations.each{|station| puts station.name}
+  @stations.each { |station| puts station.name }
 end
 
 def show_trains(station_name)
