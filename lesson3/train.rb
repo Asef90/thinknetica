@@ -1,11 +1,26 @@
 class Train
+  include Manufacturer
+  include InstanceCounter
   attr_reader :type, :number, :speed, :route, :current_station, :cars
+
+  activate_instance_counter
+
+  @@all_trains = []
 
   def initialize(number)
     @number = number
     @cars = []
     @speed = 0
-    @ready_move = false
+    @@all_trains << self
+    register_instance
+  end
+
+  def self.all
+    @@all_trains
+  end
+
+  def self.find(number)
+    all.select { |train| train.number == number }
   end
 
   def add_speed(speed)
@@ -83,11 +98,11 @@ class Train
   end
 
   def ready_move?
-    !!(@ready_move)
+    @ready_move
   end
 
   def just_routed?
-    !!(@just_routed)
+    @just_routed
   end
 
   def passenger_train?

@@ -1,4 +1,7 @@
 class PassengerTrain < Train
+
+  activate_instance_counter
+
   def hook_car(car)
     if car && car.passenger_car?
       super

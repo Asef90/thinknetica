@@ -1,9 +1,16 @@
 class Station
+  include InstanceCounter
+  include InstanceSaver
   attr_reader :name, :trains
+
+  activate_instance_saver
+  activate_instance_counter
 
   def initialize(name)
     @name = name
     @trains = []
+    add_instance
+    register_instance
   end
 
   def send_train(train)

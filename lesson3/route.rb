@@ -1,10 +1,14 @@
 class Route
+  include InstanceCounter
   attr_reader :start_station, :end_station, :stations
+
+  activate_instance_counter
 
   def initialize(start_station, end_station)
     @start_station = start_station
     @end_station = end_station
     @stations = [start_station, end_station]
+    register_instance
   end
 
   def add_between(station)
@@ -16,6 +20,6 @@ class Route
   end
 
   def show_stations
-    stations.each {|station| puts "#{station.name}"}
+    stations.each { |station| puts "#{station.name}" }
   end
 end
