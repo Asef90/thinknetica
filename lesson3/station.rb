@@ -3,9 +3,6 @@ class Station
   include InstanceSaver
   attr_reader :name, :trains
 
-  activate_instance_saver
-  activate_instance_counter
-
   def initialize(name)
     @name = name
     @trains = []

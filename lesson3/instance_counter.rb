@@ -6,29 +6,17 @@ module InstanceCounter
   end
 
   module ClassMethods
-    attr_reader :instances
-
-    def activate_instance_counter
-      @instances = 0
-    end
-
-    def register_instance(object)
-      self.instances += 1 if self == object.class
-    end
-
-    protected
-
-    attr_writer :instances
+    attr_accessor :instances
 
   end
-
 
   module InstanceMethods
 
     protected
 
     def register_instance
-      self.class.register_instance(self)
+      self.class.instances ||= 0
+      self.class.instances += 1
     end
   end
 end

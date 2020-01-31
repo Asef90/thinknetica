@@ -6,28 +6,19 @@ module InstanceSaver
   end
 
   module ClassMethods
-    def activate_instance_saver
-      @all_instances = []
-    end
+    attr_accessor :all_instances
 
     def all
       @all_instances
     end
-
-    def add_instance(object)
-      all << object if self == object.class && !(all.include?(object))
-    end
-
-    protected
-
-    attr_writer :all_instances
   end
 
   module InstanceMethods
 
     protected
     def add_instance
-      self.class.add_instance(self)
+      self.class.all_instances ||= []
+      self.class.all_instances << self
     end
 
   end
