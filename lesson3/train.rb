@@ -1,12 +1,16 @@
 class Train
   include Manufacturer
   include InstanceCounter
+  include Validator
   attr_reader :type, :number, :speed, :route, :current_station, :cars
+
+  NUMBER_FORMAT = /^([a-z0-9]){3}-?([a-z0-9]){2}$/i
 
   @@all_trains = {}
 
   def initialize(number)
     @number = number
+    validate!
     @cars = []
     @speed = 0
     @@all_trains[number] = self
@@ -37,8 +41,6 @@ class Train
     if speed == 0 && cars.include?(car)
       cars.delete(car)
       puts "Car is unhooked."
-    else
-      puts "Car unhook error."
     end
   end
 
@@ -109,10 +111,12 @@ class Train
   def cargo_train?
   end
 
-  private
-  #Все эти переменные не должны изменяться внезапно, как бы не захотел пользователь.
-  #Доступ к их изменению должен быть только внутри программы, и по правилам программы.
-  #Для этого даны интерфейсы.
-  #А attr_reader оставляем публичными, т.к. секретной информации нет, пусть смотрят.
+  protected
+  def validate!
+    raise "Number cannot be empty." if number.nil?
+    raise "Number must contain 5 or 6 characters" unless (5..6).include?(number.size)
+    raise "Number must match format 'xxx-xx' or 'xxxxx'" if number !~ NUMBER_FORMAT
+  end
+
   attr_writer :speed, :route, :current_station, :cars, :ready_move, :just_routed
 end

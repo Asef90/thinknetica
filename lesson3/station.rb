@@ -1,10 +1,12 @@
 class Station
   include InstanceCounter
   include InstanceSaver
+  include Validator
   attr_reader :name, :trains
 
   def initialize(name)
     @name = name
+    validate!
     @trains = []
     add_instance
     register_instance
@@ -33,9 +35,12 @@ cargo trains")
   end
 
   private
-  #Методы, непосредственно добавляющие и удаляющие поезда со станций,
-  #должны быть приватными, так как это внутренняя работа при перемещении
-  #поездов. И она не должна быть доступна никому.
+
+  def validate!
+    raise "The name cannot be empty." if name.nil?
+    raise "The name must contain at least 2 characters." if name.length < 2
+  end
+
   def accept_train!(train)
     trains << train unless trains.include?(train)
   end

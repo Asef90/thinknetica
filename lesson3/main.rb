@@ -1,3 +1,4 @@
+require_relative 'validator'
 require_relative 'instance_counter'
 require_relative 'manufacturer'
 require_relative 'instance_saver'
@@ -39,7 +40,7 @@ end
 #Create train methods
 def enter_train_number
   puts "Enter train number:"
-  number = gets.chomp.to_i
+  number = gets.chomp
 end
 
 def enter_train_type
@@ -262,9 +263,14 @@ while true
     station_name = enter_station_name
     create_station(station_name)
   when "2"
+    begin
     train_number = enter_train_number
     train_type = enter_train_type
     create_train(train_number, train_type)
+    rescue RuntimeError => e
+      puts e.message
+      retry
+    end
   when "3"
     action = enter_route_action
     start_name, end_name = enter_start_end_names
