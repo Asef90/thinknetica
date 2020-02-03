@@ -10,12 +10,14 @@ require_relative 'passenger_train'
 require_relative 'car'
 require_relative 'passenger_car'
 require_relative 'cargo_car'
+require_relative 'fill_data'
 
 
 @stations = []
 @trains = []
 @routes = []
 @cars = []
+@stations, @trains, @routes = seed
 
 #Create station methods
 def enter_station_name
@@ -146,6 +148,15 @@ def enter_car_type
   car_type = gets.chomp.to_i
 end
 
+def enter_car_capacity(car_type)
+  if car_type == 1
+    puts "Enter number of seats:"
+  elsif car_type == 2
+    puts "Enter total volume:"
+  end
+  car_capacity = gets.chomp.to_i if [1, 2].include?(car_type)
+end
+
 def enter_car_action
   puts "Enter action:"
   puts "1. Hook car."
@@ -157,16 +168,16 @@ def find_car(number)
   @cars.select { |car| car.number == number }[0]
 end
 
-def get_car(number, type)
+def get_car(number, type, capacity)
   unless car = find_car(number)
     if type == 1
-      car = PassengerCar.new(number)
+      car = PassengerCar.new(number, capacity)
     elsif type == 2
-      car = CargoCar.new(number)
+      car = CargoCar.new(number, capacity)
     else
       puts select_error
     end
-    $cars << car if car
+    @cars << car if car
   end
   car
 end
@@ -189,13 +200,26 @@ def change_cars(train, car, action)
   end
 end
 
-def find_and_change(train_number, car_number, car_type, action)
+def find_and_change(train_number, car_number, car_type, car_capacity, action)
   train = find_train(train_number)
-  car = get_car(car_number, car_type)
+  car = get_car(car_number, car_type, car_capacity)
   if train
     change_cars(train, car, action)
   else
     puts "Error. No such train."
+  end
+end
+
+def fill_capacity(car)
+  if car.passenger_car?
+    puts "Before - #{car.empty_seats} empty seats."
+    car.take_seat
+    puts "After - #{car.empty_seats} empty seats."
+  elsif car.cargo_car?
+    puts "How much volume to fill? Free - #{car.free_volume}."
+    volume = gets.chomp.to_i
+    car.occupy_volume(volume)
+    puts "Free volume - #{car.free_volume}."
   end
 end
 
@@ -224,12 +248,29 @@ end
 
 #Show info methods
 def show_stations
-  @stations.each { |station| puts station.name }
+  @stations.each do |station|
+    puts "Trains at station #{station.name}:"
+    station.iterate_trains do |train|
+      puts "Train # #{train.number}, type - #{train.type},\
+ number of cars - #{train.cars_number}"
+    end
+    puts
+  end
 end
 
 def show_trains(station_name)
   if station = find_station(station_name)
-    station.show_trains
+    puts "Trains info at station #{station.name}:"
+    station.iterate_trains do |train|
+      train.iterate_cars do |car|
+        puts "Train # #{train.number}:"
+        print "Car # #{car.number}, type - #{car.type}, "
+        puts "seats - #{car.seats}, occupied - #{car.occupied_seats},\
+ empty - #{car.empty_seats}." if car.passenger_car?
+        puts "volume - #{car.volume}, occupied - #{car.occupied_volume},\
+ free - #{car.free_volume}." if car.cargo_car?
+      end
+    end
   else
     puts "Error. There is no such station."
   end
@@ -243,8 +284,9 @@ def start_menu
   puts "3. Create or change route."
   puts "4. Assign a route for the train."
   puts "5. Hook / unhook cars."
-  puts "6. Move a train along a route."
-  puts "7. Get stations or trains info."
+  puts "6. Fill car."
+  puts "7. Move a train along a route."
+  puts "8. Get stations or trains info."
 
   puts "--Print 'exit' for exit--"
 end
@@ -290,13 +332,18 @@ while true
     train_number = enter_train_number
     car_number = enter_car_number
     car_type = enter_car_type
+    car_capacity = enter_car_capacity(car_type)
     action = enter_car_action
-    find_and_change(train_number, car_number, car_type, action)
+    find_and_change(train_number, car_number, car_type, car_capacity, action)
   when "6"
+    car_number = enter_car_number
+    car = find_car(car_number)
+    fill_capacity(car)
+  when "7"
     train_number = enter_train_number
     direction = enter_move_direction
     move(train_number, direction)
-  when "7"
+  when "8"
     show_stations
     station_name = enter_station_name
     show_trains(station_name)

@@ -1,6 +1,6 @@
 class Car
-  include Manufacturer
-  attr_reader :number
+  #include Manufacturer
+  attr_reader :number, :type
 
   def initialize(number)
     @number = number
@@ -11,4 +11,5 @@ class Car
 
   def cargo_car?
   end
+
 end

@@ -12,6 +12,10 @@ class Station
     register_instance
   end
 
+  def iterate_trains
+    trains.each { |train| yield(train) }
+  end
+
   def send_train(train)
     send_train!(train) if train.ready_move?
   end

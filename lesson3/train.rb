@@ -2,7 +2,7 @@ class Train
   include Manufacturer
   include InstanceCounter
   include Validator
-  attr_reader :type, :number, :speed, :route, :current_station, :cars
+  attr_reader :type, :number, :speed, :route, :current_station, :cars, :cars_number
 
   NUMBER_FORMAT = /^([a-z0-9]){3}-?([a-z0-9]){2}$/i
 
@@ -13,6 +13,7 @@ class Train
     validate!
     @cars = []
     @speed = 0
+    @cars_number = 0
     @@all_trains[number] = self
     register_instance
   end
@@ -40,8 +41,13 @@ class Train
   def unhook_car(car)
     if speed == 0 && cars.include?(car)
       cars.delete(car)
+      cars_number -= 1
       puts "Car is unhooked."
     end
+  end
+
+  def iterate_cars
+    cars.each { |car| yield(car) }
   end
 
   def accept_route(route)
@@ -114,9 +120,9 @@ class Train
   protected
   def validate!
     raise "Number cannot be empty." if number.nil?
-    raise "Number must contain 5 or 6 characters" unless (5..6).include?(number.size)
+    raise "Number must contain 5 or 6 characters" unless [5, 6].include?(number.size)
     raise "Number must match format 'xxx-xx' or 'xxxxx'" if number !~ NUMBER_FORMAT
   end
 
-  attr_writer :speed, :route, :current_station, :cars, :ready_move, :just_routed
+  attr_writer :speed, :route, :current_station, :cars, :ready_move, :just_routed, :cars_number
 end

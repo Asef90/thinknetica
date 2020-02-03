@@ -1,8 +1,14 @@
 class PassengerTrain < Train
 
+  def initialize(number)
+    super(number)
+    @type = 'Passenger'
+  end
+
   def hook_car(car)
     if car && car.passenger_car?
-      super
+      super(car)
+      self.cars_number += 1
       puts "Car is hooked."
     end
   end
