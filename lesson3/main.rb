@@ -296,22 +296,30 @@ def select_error
   "Error. Invalid number"
 end
 
+def exception
+  begin
+    yield
+  rescue RuntimeError => e
+    puts e.message
+    retry
+  end
+end
+
 
 while true
   start_menu
   answer = gets.chomp
   case answer
   when "1"
-    station_name = enter_station_name
-    create_station(station_name)
+    exception do
+      station_name = enter_station_name
+      create_station(station_name)
+    end
   when "2"
-    begin
-    train_number = enter_train_number
-    train_type = enter_train_type
-    create_train(train_number, train_type)
-    rescue RuntimeError => e
-      puts e.message
-      retry
+    exception do
+      train_number = enter_train_number
+      train_type = enter_train_type
+      create_train(train_number, train_type)
     end
   when "3"
     action = enter_route_action
