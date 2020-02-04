@@ -296,7 +296,7 @@ def select_error
   "Error. Invalid number"
 end
 
-def exception
+def check_reply
   begin
     yield
   rescue RuntimeError => e
@@ -311,12 +311,12 @@ while true
   answer = gets.chomp
   case answer
   when "1"
-    exception do
+    check_reply do
       station_name = enter_station_name
       create_station(station_name)
     end
   when "2"
-    exception do
+    check_reply do
       train_number = enter_train_number
       train_type = enter_train_type
       create_train(train_number, train_type)
