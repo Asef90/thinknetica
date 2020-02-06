@@ -1,16 +1,17 @@
-class CargoTrain < Train
+# frozen_string_literal: true
 
+class CargoTrain < Train
   def initialize(number)
     super(number)
-    @type = "Cargo"
+    @type = 'Cargo'
   end
 
   def hook_car(car)
-    if car && car.cargo_car?
-      super(car)
-      self.cars_number += 1
-      puts "Car is hooked."
-    end
+    return unless car&.cargo_car?
+
+    super(car)
+    self.cars_number += 1
+    puts 'Car is hooked.'
   end
 
   def cargo_train?

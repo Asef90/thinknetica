@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Station
   include InstanceCounter
   include InstanceSaver
@@ -34,15 +36,14 @@ class Station
         count_passenger += 1
       end
     end
-    puts ("There are #{count_passenger} passenger and #{count_cargo} \
-cargo trains")
+    puts "There are #{count_passenger} passenger and #{count_cargo} cargo trains."
   end
 
   private
 
   def validate!
-    raise "The name cannot be empty." if name.nil?
-    raise "The name must contain at least 2 characters." if name.length < 2
+    raise 'The name cannot be empty.' if name.nil?
+    raise 'The name must contain at least 2 characters.' if name.length < 2
   end
 
   def accept_train!(train)
@@ -52,5 +53,4 @@ cargo trains")
   def send_train!(train)
     trains.delete(train) if trains.include?(train)
   end
-
 end

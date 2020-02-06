@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'validator'
 require_relative 'instance_counter'
 require_relative 'manufacturer'
@@ -12,52 +14,53 @@ require_relative 'passenger_car'
 require_relative 'cargo_car'
 require_relative 'fill_data'
 
-
 @stations = []
 @trains = []
 @routes = []
 @cars = []
 @stations, @trains, @routes = seed
 
-#Create station methods
+# Create station methods
 def enter_station_name
-  puts "Enter station name:"
-  station_name = gets.chomp
+  puts 'Enter station name:'
+  gets.chomp
 end
 
 def find_station(station_name)
-  @stations.select { |station| station.name == station_name }[0]
+  @stations.detect { |station| station.name == station_name }
 end
 
 def create_station(name)
-  unless find_station(name)
+  if find_station(name)
+    puts 'Already exist.'
+  else
     station = Station.new(name)
     @stations << station
-    puts "Station is created."
-  else
-    puts "Already exist."
+    puts 'Station is created.'
   end
 end
 
-#Create train methods
+# Create train methods
 def enter_train_number
-  puts "Enter train number:"
-  number = gets.chomp
+  puts 'Enter train number:'
+  gets.chomp
 end
 
 def enter_train_type
-  puts "Enter train type:"
-  puts "1. Passenger train."
-  puts "2. Cargo train."
-  type = gets.chomp.to_i
+  puts 'Enter train type:'
+  puts '1. Passenger train.'
+  puts '2. Cargo train.'
+  gets.chomp.to_i
 end
 
 def find_train(number)
-  @trains.select { |train| train.number == number }[0]
+  @trains.detect { |train| train.number == number }
 end
 
 def create_train(number, train_type)
-  unless find_train(number)
+  if find_train(number)
+    puts 'Error. Already exist.'
+  else
     if train_type == 1
       train = PassengerTrain.new(number)
     elsif train_type == 2
@@ -67,19 +70,17 @@ def create_train(number, train_type)
     end
     if train
       @trains << train
-      puts "Train is created."
+      puts 'Train is created.'
     end
-  else
-    puts "Error. Already exist."
   end
 end
 
-#Route methods
+# Route methods
 def enter_route_action
-  puts "Enter action:"
-  puts "1. Create route."
-  puts "2. Change route."
-  action = gets.chomp.to_i
+  puts 'Enter action:'
+  puts '1. Create route.'
+  puts '2. Change route.'
+  gets.chomp.to_i
 end
 
 def enter_start_end_names
@@ -87,25 +88,25 @@ def enter_start_end_names
   start_name = gets.chomp
   puts "Enter route's end station name."
   end_name = gets.chomp
-  return start_name, end_name
+  [start_name, end_name]
 end
 
-def find_route (start_name, end_name)
-  @routes.select { |route| route.start_station.name == start_name &&
-    route.end_station.name == end_name }[0]
+def find_route(start_name, end_name)
+  @routes.detect do |route|
+    route.start_station.name == start_name &&
+      route.end_station.name == end_name
+  end
 end
 
 def create_route(start_name, end_name)
-  unless find_route(start_name, end_name)
-    if (start_station = find_station(start_name)) && end_station = find_station(end_name)
-      route = Route.new(start_station, end_station)
-      @routes << route
-      puts "Route is created."
-    else
-      puts "Please check if your stations exist."
-    end
+  if find_route(start_name, end_name)
+    puts 'Error. Already exist.'
+  elsif (start_station = find_station(start_name)) && (end_station = find_station(end_name))
+    route = Route.new(start_station, end_station)
+    @routes << route
+    puts 'Route is created.'
   else
-    puts "Error. Already exist."
+    puts 'Please check if your stations exist.'
   end
 end
 
@@ -113,63 +114,63 @@ def add_station(start_name, end_name, name_to_add)
   station_to_add = find_station(name_to_add)
   if (route = find_route(start_name, end_name)) && station_to_add
     route.add_between(station_to_add)
-    puts "Station is added to route."
+    puts 'Station is added to route.'
   else
-    puts "There is no such route or station."
+    puts 'There is no such route or station.'
   end
 end
 
-#Assign route methods
+# Assign route methods
 def assign_route(train_number, start_name, end_name)
   train = find_train(train_number)
   route = find_route(start_name, end_name)
   if train && route
     if train.route != route
       train.accept_route(route)
-      puts "Route is assigned."
+      puts 'Route is assigned.'
     else
-      puts "Route is already assigned."
+      puts 'Route is already assigned.'
     end
   else
-    puts "No train or route."
+    puts 'No train or route.'
   end
 end
 
-#Car methods
+# Car methods
 def enter_car_number
-  puts "Enter car number"
-  car_number = gets.chomp.to_i
+  puts 'Enter car number'
+  gets.chomp.to_i
 end
 
 def enter_car_type
-  puts "Enter car type"
-  puts "1. Passenger car."
-  puts "2. Cargo car."
-  car_type = gets.chomp.to_i
+  puts 'Enter car type'
+  puts '1. Passenger car.'
+  puts '2. Cargo car.'
+  gets.chomp.to_i
 end
 
 def enter_car_capacity(car_type)
   if car_type == 1
-    puts "Enter number of seats:"
+    puts 'Enter number of seats:'
   elsif car_type == 2
-    puts "Enter total volume:"
+    puts 'Enter total volume:'
   end
-  car_capacity = gets.chomp.to_i if [1, 2].include?(car_type)
+  gets.chomp.to_i if [1, 2].include?(car_type)
 end
 
 def enter_car_action
-  puts "Enter action:"
-  puts "1. Hook car."
-  puts "2. Unhook car."
-  action = gets.chomp.to_i
+  puts 'Enter action:'
+  puts '1. Hook car.'
+  puts '2. Unhook car.'
+  gets.chomp.to_i
 end
 
 def find_car(number)
-  @cars.select { |car| car.number == number }[0]
+  @cars.detect { |car| car.number == number }
 end
 
 def get_car(number, type, capacity)
-  unless car = find_car(number)
+  unless (car = find_car(number))
     if type == 1
       car = PassengerCar.new(number, capacity)
     elsif type == 2
@@ -183,15 +184,15 @@ def get_car(number, type, capacity)
 end
 
 def car_is_hooked?(car)
-  @trains.select { |train| train.cars.include?(car) }[0]
+  @trains.detect { |train| train.cars.include?(car) }
 end
 
 def change_cars(train, car, action)
   if action == 1
-    unless car_is_hooked?(car)
-      train.hook_car(car)
+    if car_is_hooked?(car)
+      puts 'Car hook error.'
     else
-      puts "Car hook error."
+      train.hook_car(car)
     end
   elsif action == 2
     train.unhook_car(car)
@@ -206,7 +207,7 @@ def find_and_change(train_number, car_number, car_type, car_capacity, action)
   if train
     change_cars(train, car, action)
   else
-    puts "Error. No such train."
+    puts 'Error. No such train.'
   end
 end
 
@@ -223,12 +224,12 @@ def fill_capacity(car)
   end
 end
 
-#Move methods
+# Move methods
 def enter_move_direction
-  puts "Enter move direction:"
-  puts "1. Move forward."
-  puts "2. Move back."
-  direction = gets.chomp.to_i
+  puts 'Enter move direction:'
+  puts '1. Move forward.'
+  puts '2. Move back.'
+  gets.chomp.to_i
 end
 
 def move(train_number, move_direction)
@@ -242,11 +243,11 @@ def move(train_number, move_direction)
       puts select_error
     end
   else
-    puts "No such train."
+    puts 'No such train.'
   end
 end
 
-#Show info methods
+# Show info methods
 def show_stations
   @stations.each do |station|
     puts "Trains at station #{station.name}:"
@@ -259,69 +260,69 @@ def show_stations
 end
 
 def show_trains(station_name)
-  if station = find_station(station_name)
+  if (station = find_station(station_name))
     puts "Trains info at station #{station.name}:"
     station.iterate_trains do |train|
       train.iterate_cars do |car|
         puts "Train # #{train.number}:"
         print "Car # #{car.number}, type - #{car.type}, "
-        puts "seats - #{car.seats}, occupied - #{car.occupied_seats},\
- empty - #{car.empty_seats}." if car.passenger_car?
-        puts "volume - #{car.volume}, occupied - #{car.occupied_volume},\
- free - #{car.free_volume}." if car.cargo_car?
+        if car.passenger_car?
+          puts "seats - #{car.seats}, occupied - #{car.occupied_seats},\
+ empty - #{car.empty_seats}."
+        elsif car.cargo_car?
+          puts "volume - #{car.volume}, occupied - #{car.occupied_volume},\
+ free - #{car.free_volume}."
+        end
       end
     end
   else
-    puts "Error. There is no such station."
+    puts 'Error. There is no such station.'
   end
 end
 
 # Enter menu method
 def start_menu
   puts "\nPlease select an action number:"
-  puts "1. Create station."
-  puts "2. Create train."
-  puts "3. Create or change route."
-  puts "4. Assign a route for the train."
-  puts "5. Hook / unhook cars."
-  puts "6. Fill car."
-  puts "7. Move a train along a route."
-  puts "8. Get stations or trains info."
+  puts '1. Create station.'
+  puts '2. Create train.'
+  puts '3. Create or change route.'
+  puts '4. Assign a route for the train.'
+  puts '5. Hook / unhook cars.'
+  puts '6. Fill car.'
+  puts '7. Move a train along a route.'
+  puts '8. Get stations or trains info.'
 
   puts "--Print 'exit' for exit--"
 end
 
-#Error method
+# Error method
 def select_error
-  "Error. Invalid number"
+  'Error. Invalid number'
 end
 
 def check_reply
-  begin
-    yield
-  rescue RuntimeError => e
-    puts e.message
-    retry
-  end
+  yield
+rescue RuntimeError => e
+  puts e.message
+  retry
 end
 
-
-while true
+loop do
   start_menu
   answer = gets.chomp
   case answer
-  when "1"
+  when '1'
     check_reply do
       station_name = enter_station_name
       create_station(station_name)
     end
-  when "2"
+  when '2'
     check_reply do
       train_number = enter_train_number
       train_type = enter_train_type
       create_train(train_number, train_type)
     end
-  when "3"
+  when '3'
     action = enter_route_action
     start_name, end_name = enter_start_end_names
     if action == 1
@@ -332,30 +333,30 @@ while true
     else
       puts select_error
     end
-  when "4"
+  when '4'
     train_number = enter_train_number
     start_name, end_name = enter_start_end_names
     assign_route(train_number, start_name, end_name)
-  when "5"
+  when '5'
     train_number = enter_train_number
     car_number = enter_car_number
     car_type = enter_car_type
     car_capacity = enter_car_capacity(car_type)
     action = enter_car_action
     find_and_change(train_number, car_number, car_type, car_capacity, action)
-  when "6"
+  when '6'
     car_number = enter_car_number
     car = find_car(car_number)
     fill_capacity(car)
-  when "7"
+  when '7'
     train_number = enter_train_number
     direction = enter_move_direction
     move(train_number, direction)
-  when "8"
+  when '8'
     show_stations
     station_name = enter_station_name
     show_trains(station_name)
-  when "exit"
+  when 'exit'
     break
   end
 end

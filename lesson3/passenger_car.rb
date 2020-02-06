@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class PassengerCar < Car
   attr_reader :seats, :occupied_seats, :empty_seats
 
   def initialize(number, seats)
     super(number)
-    @type = "Passenger"
+    @type = 'Passenger'
     @seats = seats
     @occupied_seats = 0
     @empty_seats = seats
@@ -14,14 +16,13 @@ class PassengerCar < Car
   end
 
   def take_seat
-    if empty_seats > 0
-      self.occupied_seats += 1
-      self.empty_seats -= 1
-    end
+    return unless empty_seats.positive?
+
+    self.occupied_seats += 1
+    self.empty_seats -= 1
   end
 
   private
 
   attr_writer :occupied_seats, :empty_seats
-
 end

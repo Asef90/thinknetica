@@ -1,5 +1,6 @@
-module InstanceSaver
+# frozen_string_literal: true
 
+module InstanceSaver
   def self.included(base)
     base.extend ClassMethods
     base.send :include, InstanceMethods
@@ -14,12 +15,11 @@ module InstanceSaver
   end
 
   module InstanceMethods
-
     protected
+
     def add_instance
       self.class.all_instances ||= []
       self.class.all_instances << self
     end
-
   end
 end

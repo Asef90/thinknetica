@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Route
   include InstanceCounter
   include Validator
@@ -16,15 +18,20 @@ class Route
   end
 
   def delete_between(station)
-    stations.delete(station) unless (station == start_station || station == end_station)
+    return if station == start_station || station == end_station
+
+    stations.delete(station)
   end
 
   def show_stations
-    stations.each { |station| puts "#{station.name}" }
+    stations.each { |station| puts station.name.to_s }
   end
 
   private
+
   def validate!
-    raise "The start and end stations must be present." if start_station.nil? || end_station.nil?
+    return unless start_station.nil? || end_station.nil?
+
+    raise 'The start and end stations must be present.'
   end
 end

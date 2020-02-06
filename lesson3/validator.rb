@@ -1,5 +1,6 @@
-module Validator
+# frozen_string_literal: true
 
+module Validator
   def self.included(base)
     base.send :include, InstanceMethods
   end
@@ -8,7 +9,7 @@ module Validator
     def valid?
       validate!
       true
-    rescue
+    rescue RuntimeError
       false
     end
   end

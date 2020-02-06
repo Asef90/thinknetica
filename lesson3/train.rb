@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class Train
   include Manufacturer
   include InstanceCounter
   include Validator
   attr_reader :type, :number, :speed, :route, :current_station, :cars, :cars_number
 
-  NUMBER_FORMAT = /^([a-z0-9]){3}-?([a-z0-9]){2}$/i
+  NUMBER_FORMAT = /^([a-z0-9]){3}-?([a-z0-9]){2}$/i.freeze
 
   @@all_trains = {}
 
@@ -35,15 +37,15 @@ class Train
   end
 
   def hook_car(car)
-    cars << car if speed == 0
+    cars << car if speed.zero?
   end
 
   def unhook_car(car)
-    if speed == 0 && cars.include?(car)
-      cars.delete(car)
-      cars_number -= 1
-      puts "Car is unhooked."
-    end
+    return unless speed.zero? && cars.include?(car)
+
+    cars.delete(car)
+    self.cars_number -= 1
+    puts 'Car is unhooked.'
   end
 
   def iterate_cars
@@ -51,31 +53,31 @@ class Train
   end
 
   def accept_route(route)
-    if route
-      self.just_routed = true
-      self.route = route
-      self.current_station = route.start_station
-      current_station.accept_train(self)
-      self.just_routed = false
-    end
+    return unless route
+
+    self.just_routed = true
+    self.route = route
+    self.current_station = route.start_station
+    current_station.accept_train(self)
+    self.just_routed = false
   end
 
   def next_station
     i = route.stations.index(current_station)
     length = route.stations.size
-    unless i == length - 1
-      route.stations[i + 1]
+    if i == length - 1
+      nil
     else
-      return nil
+      route.stations[i + 1]
     end
   end
 
   def previous_station
     i = route.stations.index(current_station)
-    unless i == 0
-      route.stations[i - 1]
+    if i.zero?
+      nil
     else
-      return nil
+      route.stations[i - 1]
     end
   end
 
@@ -87,7 +89,7 @@ class Train
       current_station.accept_train(self)
       self.ready_move = false
     else
-      puts "This is the terminal station."
+      puts 'This is the terminal station.'
     end
   end
 
@@ -99,7 +101,7 @@ class Train
       current_station.accept_train(self)
       self.ready_move = false
     else
-      puts "This is the starting station."
+      puts 'This is the starting station.'
     end
   end
 
@@ -111,17 +113,20 @@ class Train
     @just_routed
   end
 
-  def passenger_train?
-  end
+  def passenger_train?; end
 
-  def cargo_train?
-  end
+  def cargo_train?; end
 
   protected
+
   def validate!
-    raise "Number cannot be empty." if number.nil?
-    raise "Number must contain 5 or 6 characters" unless [5, 6].include?(number.size)
-    raise "Number must match format 'xxx-xx' or 'xxxxx'" if number !~ NUMBER_FORMAT
+    raise 'Number cannot be empty.' if number.nil?
+    unless [5, 6].include?(number.size)
+      raise 'Number must contain 5 or 6 characters'
+    end
+    if number !~ NUMBER_FORMAT
+      raise "Number must match format 'xxx-xx' or 'xxxxx'"
+    end
   end
 
   attr_writer :speed, :route, :current_station, :cars, :ready_move, :just_routed, :cars_number
