@@ -307,6 +307,7 @@ rescue RuntimeError => e
   retry
 end
 
+# rubocop:disable Metrics/BlockLength
 loop do
   start_menu
   answer = gets.chomp
@@ -360,3 +361,4 @@ loop do
     break
   end
 end
+# rubocop:enable Metrics/BlockLength

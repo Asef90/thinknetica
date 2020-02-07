@@ -17,11 +17,13 @@ class Route
     stations.insert(-2, station)
   end
 
+  # rubocop:disable Style/MultipleComparison
   def delete_between(station)
     return if station == start_station || station == end_station
 
     stations.delete(station)
   end
+  # rubocop:enable Style/MultipleComparison
 
   def show_stations
     stations.each { |station| puts station.name.to_s }

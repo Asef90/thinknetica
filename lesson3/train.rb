@@ -8,7 +8,9 @@ class Train
 
   NUMBER_FORMAT = /^([a-z0-9]){3}-?([a-z0-9]){2}$/i.freeze
 
+  # rubocop:disable Style/ClassVars
   @@all_trains = {}
+  # rubocop:enable Style/ClassVars
 
   def initialize(number)
     @number = number
@@ -121,12 +123,8 @@ class Train
 
   def validate!
     raise 'Number cannot be empty.' if number.nil?
-    unless [5, 6].include?(number.size)
-      raise 'Number must contain 5 or 6 characters'
-    end
-    if number !~ NUMBER_FORMAT
-      raise "Number must match format 'xxx-xx' or 'xxxxx'"
-    end
+    raise 'Number must contain 5 or 6 characters' unless [5, 6].include?(number.size)
+    raise "Number must match format 'xxx-xx' or 'xxxxx'" if number !~ NUMBER_FORMAT
   end
 
   attr_writer :speed, :route, :current_station, :cars, :ready_move, :just_routed, :cars_number
