@@ -1,10 +1,11 @@
-# frozen_string_literal: true
-
 class Station
   include InstanceCounter
   include InstanceSaver
-  include Validator
+  include Validation
+
   attr_reader :name, :trains
+
+  validate :name, :presence
 
   def initialize(name)
     @name = name
@@ -40,11 +41,6 @@ class Station
   end
 
   private
-
-  def validate!
-    raise 'The name cannot be empty.' if name.nil?
-    raise 'The name must contain at least 2 characters.' if name.length < 2
-  end
 
   def accept_train!(train)
     trains << train unless trains.include?(train)

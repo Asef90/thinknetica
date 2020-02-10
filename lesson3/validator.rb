@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 module Validator
   def self.included(base)
     base.send :include, InstanceMethods

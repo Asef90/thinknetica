@@ -1,7 +1,8 @@
-# frozen_string_literal: true
-
 class PassengerCar < Car
   attr_reader :seats, :occupied_seats, :empty_seats
+
+  validate :seats, :presence
+  validate :seats, :type, Integer
 
   def initialize(number, seats)
     super(number)

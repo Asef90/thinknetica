@@ -1,12 +1,14 @@
-# frozen_string_literal: true
-
 class Train
   include Manufacturer
   include InstanceCounter
-  include Validator
-  attr_reader :type, :number, :speed, :route, :current_station, :cars, :cars_number
+  include Validation
 
   NUMBER_FORMAT = /^([a-z0-9]){3}-?([a-z0-9]){2}$/i.freeze
+
+  attr_reader :type, :number, :speed, :route, :current_station, :cars, :cars_number
+
+  validate :number, :presence
+  validate :number, :format, NUMBER_FORMAT
 
   # rubocop:disable Style/ClassVars
   @@all_trains = {}
@@ -14,7 +16,7 @@ class Train
 
   def initialize(number)
     @number = number
-    validate!
+    #validate!
     @cars = []
     @speed = 0
     @cars_number = 0
@@ -120,12 +122,6 @@ class Train
   def cargo_train?; end
 
   protected
-
-  def validate!
-    raise 'Number cannot be empty.' if number.nil?
-    raise 'Number must contain 5 or 6 characters' unless [5, 6].include?(number.size)
-    raise "Number must match format 'xxx-xx' or 'xxxxx'" if number !~ NUMBER_FORMAT
-  end
 
   attr_writer :speed, :route, :current_station, :cars, :ready_move, :just_routed, :cars_number
 end

@@ -1,9 +1,13 @@
-# frozen_string_literal: true
-
 class Route
   include InstanceCounter
-  include Validator
+  include Validation
+
   attr_reader :start_station, :end_station, :stations
+
+  validate :start_station, :presence
+  validate :end_station, :presence
+  validate :start_station, :type, Station
+  validate :end_station, :type, Station
 
   def initialize(start_station, end_station)
     @start_station = start_station
@@ -27,13 +31,5 @@ class Route
 
   def show_stations
     stations.each { |station| puts station.name.to_s }
-  end
-
-  private
-
-  def validate!
-    return unless start_station.nil? || end_station.nil?
-
-    raise 'The start and end stations must be present.'
   end
 end

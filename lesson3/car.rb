@@ -1,11 +1,14 @@
-# frozen_string_literal: true
-
 class Car
   include Manufacturer
+  include Validation
+
   attr_reader :number, :type
+
+  validate :number, :presence
 
   def initialize(number)
     @number = number
+    validate!
   end
 
   def passenger_car?; end

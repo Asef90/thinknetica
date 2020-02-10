@@ -1,7 +1,8 @@
-# frozen_string_literal: true
-
 class CargoCar < Car
   attr_reader :volume, :occupied_volume, :free_volume
+
+  validate :volume, :presence
+  validate :volume, :type, Numeric
 
   def initialize(number, volume)
     super(number)

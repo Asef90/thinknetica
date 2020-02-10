@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 def seed
   st1 = Station.new('Nakhabino')
   st2 = Station.new('Podolsk')
