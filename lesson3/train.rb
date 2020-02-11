@@ -16,7 +16,7 @@ class Train
 
   def initialize(number)
     @number = number
-    #validate!
+    # validate!
     @cars = []
     @speed = 0
     @cars_number = 0

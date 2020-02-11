@@ -14,16 +14,15 @@ module Validation
       raise 'Additional argument required' if %i[format type].include?(method) && arg.nil?
 
       self.validations ||= []
-      validations << [method, var, arg]
-      puts validations.to_s
+      validations << { method: method, var: var, arg: arg }
     end
     # rubocop:enable Metrics/CyclomaticComplexity
   end
 
   module InstanceMethods
     def validate!
-      self.class.validations.each do |arg|
-        send(arg[0], instance_variable_get("@#{arg[1]}".to_sym), arg[2])
+      self.class.validations.each do |elem|
+        send(elem[:method], instance_variable_get("@#{elem[:var]}".to_sym), elem[:arg])
       end
     end
 

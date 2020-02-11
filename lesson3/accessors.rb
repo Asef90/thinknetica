@@ -16,9 +16,10 @@ module Accessors
         define_method("#{arg}_history") { instance_variable_get(arg_history_var) }
         define_method(arg) { instance_variable_get(arg_var) }
         define_method("#{arg}=") do |value|
-          instance_variable_set(arg_var, value)
           instance_variable_set(arg_history_var, instance_variable_get(arg_history_var) || [])
-          instance_variable_get(arg_history_var) << value
+          instance_variable_get(arg_var) &&
+            (instance_variable_get(arg_history_var) << instance_variable_get(arg_var))
+          instance_variable_set(arg_var, value)
         end
       end
     end
