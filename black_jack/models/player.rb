@@ -1,9 +1,10 @@
 class Player
-  attr_reader :cards, :num_of_cards
+  attr_reader :cards, :num_of_cards, :bank
 
   def initialize(name)
     @name = name
     @cards = []
+    @bank = 100
   end
 
   def add_card(card)
@@ -12,6 +13,16 @@ class Player
 
   def clear_cards
     cards.clear
+  end
+
+  def increase_bank(amount)
+    self.bank += amount
+  end
+
+  def reduce_bank(amount)
+    raise "No such amount in the bank" if amount > self.bank
+
+    self.bank -= amount
   end
 
   def points
@@ -23,6 +34,6 @@ class Player
 
   private
 
-  attr_writer :cards
+  attr_writer :cards, :bank
 
 end
