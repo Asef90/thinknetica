@@ -1,5 +1,5 @@
 class Player
-  attr_reader :cards, :num_of_cards, :bank
+  attr_reader :name, :cards, :bank
 
   def initialize(name)
     @name = name
@@ -8,11 +8,19 @@ class Player
   end
 
   def add_card(card)
+    raise "Player can have only 3 cards" if num_of_cards == 3
+
     cards << card
   end
 
   def clear_cards
     cards.clear
+  end
+
+  def show_cards
+    puts "#{name} has following cards:"
+    cards.each { |card| puts "#{card.rank}#{card.suite}" }
+    puts "Total #{points} points."
   end
 
   def increase_bank(amount)
@@ -30,6 +38,10 @@ class Player
     cards.each { |card| total += card.value }
     total -= 10 if total > 21 && cards.detect { |card| card.rank == "A" }
     total
+  end
+
+  def num_of_cards
+    cards.size
   end
 
   private

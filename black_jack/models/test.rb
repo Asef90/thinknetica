@@ -1,17 +1,15 @@
-require_relative 'card.rb'
-require_relative 'player.rb'
+require_relative 'card'
+require_relative 'player'
+require_relative 'card_deck'
 
-card = Card.new("+", "A")
-card2 = Card.new("*", "9")
-card3 = Card.new("#", "2")
-card4 = Card.new("+", "K")
-card5 = Card.new("+", "9")
-
+cd = CardDeck.new
 player = Player.new("Ivan")
-player.add_card(card)
-player.add_card(card2)
-player.add_card(card3)
-puts player.points
-player.clear_cards
-puts player.points
+player.add_card(cd.draw_card)
+player.add_card(cd.draw_card)
+player.add_card(cd.draw_card)
+
+puts player.bank
+player.increase_bank(50)
+puts player.bank
+player.show_cards
 
