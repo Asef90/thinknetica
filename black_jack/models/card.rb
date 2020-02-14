@@ -11,13 +11,12 @@ class Card
 
   def count_value
     case rank
-    when ("2".."10")
+    when ('2'..'10')
       rank.to_i
-    when "J", "Q", "K"
+    when 'J', 'Q', 'K'
       10
-    when "A"
+    when 'A'
       11
     end
   end
-
 end

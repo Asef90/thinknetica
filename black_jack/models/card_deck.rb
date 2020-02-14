@@ -1,8 +1,6 @@
-require_relative 'card'
-
 class CardDeck
-  SUITE = ["♠", "♥", "♣", "♦"]
-  RANK = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]
+  SUITE = ['♠', '♥', '♣', '♦'].freeze
+  RANK = %w[2 3 4 5 6 7 8 9 10 J Q K A].freeze
 
   attr_reader :deck
 
@@ -11,7 +9,7 @@ class CardDeck
   end
 
   def draw_card
-    raise "No cards in deck" if deck.empty?
+    raise 'No cards in deck' if deck.empty?
 
     deck.pop
   end
@@ -28,5 +26,4 @@ class CardDeck
     end
     temp_deck.shuffle!
   end
-
 end

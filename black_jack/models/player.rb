@@ -8,7 +8,7 @@ class Player
   end
 
   def add_card(card)
-    raise "Player can have only 3 cards" if num_of_cards == 3
+    raise 'Player can have only 3 cards' if num_of_cards == 3
 
     cards << card
   end
@@ -18,7 +18,7 @@ class Player
   end
 
   def show_cards
-    puts "#{name} has following cards:"
+    puts "#{name}'s cards:"
     cards.each { |card| puts "#{card.rank}#{card.suite}" }
     puts "Total #{points} points."
   end
@@ -28,7 +28,7 @@ class Player
   end
 
   def reduce_bank(amount)
-    raise "No such amount in the bank" if amount > self.bank
+    raise 'No such amount in the bank' if amount > self.bank
 
     self.bank -= amount
   end
@@ -36,7 +36,7 @@ class Player
   def points
     total = 0
     cards.each { |card| total += card.value }
-    total -= 10 if total > 21 && cards.detect { |card| card.rank == "A" }
+    total -= 10 if total > 21 && cards.detect { |card| card.rank == 'A' }
     total
   end
 
@@ -47,5 +47,4 @@ class Player
   private
 
   attr_writer :cards, :bank
-
 end
