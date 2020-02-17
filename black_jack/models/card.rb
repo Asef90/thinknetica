@@ -7,6 +7,10 @@ class Card
     @value = count_value
   end
 
+  def to_s
+    "#{rank}#{suite}"
+  end
+
   private
 
   def count_value

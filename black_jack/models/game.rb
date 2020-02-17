@@ -2,6 +2,8 @@ class Game
   BET = 10
   NUM_OF_PLAYERS = 2
   LIMIT_POINTS = 21
+  DEALER_LIMIT = 17
+  BANK = 100
 
   attr_reader :player, :dealer, :card_deck, :game_bank
 
@@ -9,91 +11,116 @@ class Game
     @dealer = dealer
     @player = player
     @card_deck = CardDeck.new
+    @game_over = false
+  end
+
+  def player_name
+    player.name
   end
 
   def take_bets
-    puts "Taking bets: #{BET}"
     dealer.reduce_bank(BET)
     player.reduce_bank(BET)
     self.game_bank = NUM_OF_PLAYERS * BET
   end
 
-  def give_card_to(player)
-    player.add_card(card_deck.draw_card)
-  end
-
   def deal_cards_first_time
-    puts 'Dealing cards first time.'
     2.times { give_card_to(player) }
     2.times { give_card_to(dealer) }
   end
 
-  def show_dealer_cards
-    puts "Dealer's cards : ** **"
+  def player_action(action)
+    if action == :add_card
+      give_card_to(player)
+      dealer_move
+    elsif action == :skip
+      dealer_move
+    end
   end
 
-  def show_player_cards
-    player.show_cards
+  def player_cards
+    player.cards
   end
 
-  def play_again?
-    puts 'Play again? y/n'
-    gets.chomp.downcase
+  def player_points
+    player.points
   end
 
-  def enter_player_action
-    puts 'What to do:'
-    puts '1. Skip'
-    puts '2. Add card'
-    puts '3. Open cards'
-    gets.chomp.to_i
+  def player_bank
+    player.bank
+  end
+
+  def dealer_cards
+    dealer.cards
+  end
+
+  def dealer_points
+    dealer.points
   end
 
   def dealer_move
-    give_card_to(dealer) if dealer.points < 17
+    give_card_to(dealer) if dealer.points < DEALER_LIMIT
   end
 
-  def open_cards
-    puts 'Opening cards.'
-    dealer.show_cards
-    player.show_cards
+  def dealer_bank
+    dealer.bank
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-  def pay_bank
-    player_points = player.points
-    dealer_points = dealer.points
+  def result
     if (player_points <= LIMIT_POINTS && player_points > dealer_points) ||
        (player_points <= LIMIT_POINTS && dealer_points > LIMIT_POINTS)
-      puts "#{player.name} win."
-      player.increase_bank(game_bank)
+      :player_win
     elsif (dealer_points <= LIMIT_POINTS && dealer_points > player_points) ||
           (dealer_points <= LIMIT_POINTS && player_points > LIMIT_POINTS)
-      puts 'Dealer win.'
-      dealer.increase_bank(game_bank)
+      :dealer_win
     else
-      puts "It's draw."
-      return_bank
+      :draw
     end
   end
   # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+
+  def pay_bank
+    if result == :player_win
+      player.increase_bank(game_bank)
+    elsif result == :dealer_win
+      dealer.increase_bank(game_bank)
+    else
+      return_bank
+    end
+  end
+
+  def bet
+    BET
+  end
+
+  def restart_game(decision)
+    clear_cards if decision == :y
+  end
+
+  def game_over?
+    if player_bank < BET || dealer_bank < BET
+      true
+    else
+      false
+    end
+  end
+
+  private
+
+  attr_writer :game_bank, :card_deck
+
+  def give_card_to(player)
+    player.add_card(card_deck.draw_card) if player.num_of_cards < 3
+  end
 
   def return_bank
     player.increase_bank(BET)
     dealer.increase_bank(BET)
   end
 
-  def show_banks
-    puts "#{player.name}'s bank: #{player.bank}."
-    puts "Dealer's bank : #{dealer.bank}."
-  end
-
   def clear_cards
     player.clear_cards
     dealer.clear_cards
   end
-
-  private
-
-  attr_writer :game_bank, :card_deck
 end

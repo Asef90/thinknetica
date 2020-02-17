@@ -2,46 +2,28 @@ require_relative 'models/card'
 require_relative 'models/card_deck'
 require_relative 'models/player'
 require_relative 'models/game'
-
-def enter_player_name
-  puts "Enter player's name:"
-  gets.chomp
-end
+require_relative 'interface_methods'
 
 dealer = Player.new('Dealer')
 player_name = enter_player_name
 player = Player.new(player_name)
 
-# rubocop:disable Metrics/BlockLength
 loop do
   game = Game.new(player, dealer)
-  begin
-    game.take_bets
-  rescue RuntimeError
-    puts "Player's or dealer's bank = 0"
-    break
-  end
-  game.show_banks
+  show_bet(game)
+  game.take_bets
+  show_banks(game)
   game.deal_cards_first_time
-  game.show_dealer_cards
-  game.show_player_cards
-  action = game.enter_player_action
-  if action == 1
-    game.dealer_move
-  elsif action == 2
-    game.give_card_to(player)
-    game.show_player_cards
-    game.dealer_move
-  end
-  game.open_cards
+  show_dealer_cards_before
+  show_player_cards(game)
+  show_player_points(game)
+  game.player_action(enter_player_action)
+  show_cards(game)
+  show_points(game)
+  show_result(game)
   game.pay_bank
-  game.show_banks
-  answer = game.play_again?
-  if answer == 'y'
-    game.clear_cards
-    redo
-  elsif answer == 'n'
-    break
-  end
+  show_banks(game)
+  answer = play_again?
+  game.restart_game(answer)
+  break if answer == :n || game.game_over?
 end
-# rubocop:enable Metrics/BlockLength

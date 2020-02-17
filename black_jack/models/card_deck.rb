@@ -9,9 +9,7 @@ class CardDeck
   end
 
   def draw_card
-    raise 'No cards in deck' if deck.empty?
-
-    deck.pop
+    deck.pop unless deck.empty?
   end
 
   private
